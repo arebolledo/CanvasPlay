@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Hex Play</title>
+
+</head>
+<body>
+    <span>
+        <input type="text" id="txtDegree" />
+        <button id="btnDraw" onclick="draw()">Draw</button>
+    </span>
+    <canvas id="mycanvas" width="500" height="500"></canvas>
+    <script>
+
+        // http://www.drking.org.uk/hexagons/misc/dims.html
+        // Using s and a as defined above
+        function buildHex(ctx, x, y, s, color) {
+            var a = Math.sqrt(3.0) * s;
+            ctx.fillStyle = color;
+
+            ctx.beginPath();
+            ctx.moveTo(x - a / 2.0, y - s / 2.0);
+            ctx.lineTo(x, y - s);
+            ctx.lineTo(x + a / 2.0, y - s / 2.0);
+            ctx.lineTo(x + a / 2.0, y + s / 2.0);
+            ctx.lineTo(x, y + s);
+            ctx.lineTo(x - a / 2.0, y + s / 2.0);
+            ctx.fill();
+            ctx.closePath();
+            ctx.stroke();
+        }
+
+        function buildRow(ctx, x, y, s, n) {
+            var a = Math.sqrt(3.0) * s;
+            for (var i = 0; i < n; i++) {
+                buildHex(ctx, x + i * a, y, s, "white");
+            }
+        }
+
+        function buildHexGrid(ctx, degree, x, y, s) {
+            var a = Math.sqrt(3.0) * s;
+
+            for (var row = degree * -1 + 1; row < degree; row++) {
+                var yOffset = (s / 2) * row * -1;;
+                var yDelta = s * 2 * row;
+
+                var xOffSet = (degree - 1) - (0.5 * Math.abs(row * 1.0));
+                xOffSet *= a;
+
+                buildRow(ctx, x - xOffSet, (y + yOffset) + yDelta, s, (degree * 2 - 1) - Math.abs(row));
+            }
+        }
+
+        function draw() {
+            var input = document.getElementById("txtDegree");
+            var degree = parseInt(input.value);
+            var canvas = document.getElementById("mycanvas"),
+                 ctx = canvas.getContext("2d");
+            canvas.width = canvas.width;
+            buildHexGrid(ctx, degree, 250, 250, 25);
+        }
+
+
+
+
+    </script>
+</body>
+</html>
